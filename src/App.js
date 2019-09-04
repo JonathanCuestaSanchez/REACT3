@@ -9,7 +9,7 @@ class App extends Component {
     super(props);
     localStorage.setItem('isLoggedin',false);
     localStorage.setItem('email',"prueba@mail.com");
-    localStorage.setItem('password',"12345678");
+    localStorage.setItem('password',"1234");
   }
 
   render() {

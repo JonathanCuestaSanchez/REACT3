@@ -16,7 +16,8 @@ export class Login extends React.Component{
         super(props);
         this.state = {email: "", password: ''};
         this.handleEmail = this.handleEmail.bind(this);
-        this.handlePassword = this.handlePassword.bind(this);        
+        this.handlePassword = this.handlePassword.bind(this);      
+        this.handleLogin = this.handleLogin.bind(this);      
     }
 
     render(){
@@ -77,14 +78,12 @@ export class Login extends React.Component{
         });
     }
     handleLogin(e) {
-        e.preventDefault();       
-        if (! this.state.email==localStorage.getItem("email")){
-           return;
-
-        }
-           
-
-        
+        e.preventDefault();            
+        if ( this.state.email===localStorage.getItem("email") &&  this.state.password===localStorage.getItem("password")){
+           localStorage.setItem("isLoggedin",true);
+        }    else{
+            return;
+        }   
     }
 
 
