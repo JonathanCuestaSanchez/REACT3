@@ -31,7 +31,7 @@ class App extends Component {
 
           <div>
             <Route exact path="/" component={LoginView} />
-            <Route path="/todo" component={TodoAppView} />
+            <Route  exact  path="/todo" component={TodoAppView} />
           </div>
         </div>
       </Router>
