@@ -5,7 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import LockIcon from '@material-ui/icons/LockOutlined';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import './Login.css'
@@ -15,17 +15,17 @@ import { Redirect } from "react-router-dom";
 export class Login extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { email: "", password: '' };
+        this.state = { email: "", password:"",isLogged: JSON.parse(localStorage.getItem("isLogged")) };
         this.handleEmail = this.handleEmail.bind(this);
         this.handlePassword = this.handlePassword.bind(this);
-        this.handleLogin = this.handleLogin.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);  
+      
     }
 
     render() {
-        if(localStorage.getItem("isLoggedin")){
-            console.log(localStorage.getItem("isLoggedin"))
+        if(this.state.isLogged==true){             
             return <Redirect to={{
-                pathname: '/todo',
+                pathname: '/main',
             }}
             />
         }
@@ -35,9 +35,9 @@ export class Login extends React.Component {
                 <main className="layout">
                     <Paper className="paper">
                         <Avatar className="avatar">
-                            <LockIcon />
+                            <AccountCircleIcon />
                         </Avatar>
-                        <Typography variant="headline">Sign in</Typography>
+                        <Typography variant="headline">Task Planner</Typography>
                         <form className="form" onSubmit={this.handleLogin}>
                             <FormControl margin="normal" required fullWidth>
                                 <InputLabel htmlFor="email">Email Address</InputLabel>
@@ -63,8 +63,6 @@ export class Login extends React.Component {
                                 variant="raised"
                                 color="primary"
                                 className="submit"
-
-
                             >
                                 Sign in
                             </Button>
@@ -85,15 +83,11 @@ export class Login extends React.Component {
             password: e.target.value
         });
     }
-    handleLogin(e) {
-        e.preventDefault();
-        if (this.state.email === localStorage.getItem("email") && this.state.password === localStorage.getItem("password")) {
-            localStorage.setItem("isLoggedin", true);
-
-            
-        } else {
-            return;
-        }
+    handleLogin(e) {        
+        e.preventDefault();  
+            localStorage.setItem("isLogged", 'true');   
+            this.setState({isLogged: true});                
+       
     }
 
 

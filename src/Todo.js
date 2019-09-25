@@ -3,8 +3,7 @@ import React from 'react';
 export class Todo extends React.Component {
 
     constructor(props) {
-        super(props);
-        console.log(props.dueDate);    
+        super(props);          
     }   
 
     render() {
