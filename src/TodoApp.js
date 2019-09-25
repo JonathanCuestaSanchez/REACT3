@@ -7,11 +7,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-
+import { Redirect } from "react-router-dom";
 class TodoApp extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { items:  JSON.parse(localStorage.getItem('task')), title: '',description:"", status:"a", responsible: '', dueDate: '', menu: '' };
+    this.state = { items:  JSON.parse(localStorage.getItem('task')), title: '',description:"", status:"a", responsible: '', dueDate: '', menu: '', back: false};
     this.handleStatusChange = this.handleStatusChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleResponsibleChange = this.handleResponsibleChange.bind(this);
@@ -20,9 +20,8 @@ class TodoApp extends React.Component {
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
     this.handleMenuChange = this.handleMenuChange.bind(this);
   }  
-  handleStatusChange(e) {    
-    this.setState({ status: e.target.value });
-    console.log( this.state.status)
+  handleStatusChange(e) {     
+    this.setState({ status: e.target.value });    
   }
   handleDescriptionChange(e) {
     this.setState({ description: e.target.value });
@@ -52,9 +51,10 @@ class TodoApp extends React.Component {
       title: this.state.title,
       description: this.state.description,
       responsible:{name:this.state.responsible} ,
-      state: this.state.status,
+      status: this.state.status,
       dueDate: this.state.dueDate,
     };
+    this.setState({ back: true });
     this.setState(prevState => ({
       items: prevState.items.concat(newItem),
       title:"",
@@ -63,11 +63,18 @@ class TodoApp extends React.Component {
       status:"",
       dueDate: "",      
     }));
-    localStorage.setItem("task",JSON.stringify(this.state.items));
+    
     
     
   }
   render() {
+    if(this.state.back){
+      localStorage.setItem("task",JSON.stringify(this.state.items));
+      return <Redirect to={{
+        pathname: '/main',
+       }}
+       />
+    }
     const divStyle = {      
       minWidth: 250,   
      
@@ -76,7 +83,10 @@ class TodoApp extends React.Component {
       padding:0,
       marginTop:"100px"    
      
-    }; 
+    };
+    const estados = [
+      { status: "Completed" }, { status: "In Progess" }, { status: "Ready" }
+    ] 
     return (
       <div>
         <Menu/>
@@ -123,20 +133,21 @@ class TodoApp extends React.Component {
                          
             <br/>
             <br/> 
-            <FormControl style={divStyle}>
-              <InputLabel htmlFor="age-simple">State</InputLabel>     
-              <Select              
-                value={this.state.status}
-                onChange={this.handleStatusChange}
-                inputProps={{                  
-                  id: 'age-simple',
-                }}
-              >               
-              <MenuItem value={"Completed"}>Completed</MenuItem>
-              <MenuItem value={"In Progress"}>In Progress</MenuItem>
-              <MenuItem value={"Ready"}>Ready</MenuItem>
-            </Select>
-            </FormControl>
+            <TextField
+                  id="priority-todo"
+                  select
+                  label="Seleccione"
+                  value={this.state.status}
+                  onChange={this.handleStatusChange}
+                  helperText="Por favor seleccione el estado"
+                  margin="normal"
+                >
+                  {estados.map(option => (
+                    <MenuItem key={option.status} value={option.status}>
+                      {option.status}
+                    </MenuItem>
+                  ))}
+                </TextField>
             <br/>
             <br/>
             <TextField
