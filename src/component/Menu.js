@@ -9,8 +9,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Face from '@material-ui/icons/Face';
 import Menu from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
-
-
+import EditIcon from '@material-ui/icons/Edit';
+import { Link } from "react-router-dom";
 
 function logOut() {
   localStorage.removeItem("isLoggedin");
@@ -19,7 +19,7 @@ function logOut() {
 }
 const styleMenu = {
   //modificar de acuerdo a lo que se defina como color principal
-  background: "#3494AB",
+  background: "white",
   height:"100vh"
 };
 const styleButton ={
@@ -49,7 +49,8 @@ export default function TemporaryDrawer() {
       <List >
         <ListItem key='User'>
           <ListItemIcon><Face></Face></ListItemIcon>
-          <ListItemText primary={localStorage.getItem('email')} />
+          <ListItemText >{localStorage.getItem("name")}<br/>{localStorage.getItem("email")} </ListItemText>
+          <Link to="/profile"><EditIcon/></Link>
         </ListItem>
 
       </List>

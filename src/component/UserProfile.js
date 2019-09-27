@@ -1,10 +1,18 @@
-
+import Menu from "./Menu";
 import React from 'react';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-export class Cards extends Component {
+import { Redirect } from "react-router-dom";
+export class UserProfile extends  React.Component {
     constructor(props) {
         super(props);   
-        this.state={name:"",email:localStorage.getItem("email"),password:"",secondPassword:"",confim:false}          
+        this.state={name:"",email:localStorage.getItem("email"),password:"",secondPassword:"",confirm:false}
+        this.handleName = this.handleName.bind(this); 
+        this.handleEmail = this.handleEmail.bind(this); 
+        this.handlePassword = this.handlePassword.bind(this); 
+        this.handleRepiPassword = this.handleRepiPassword.bind(this); 
+        this.handleSave = this.handleSave.bind(this);             
     }
     handleName(e) {
         this.setState({
@@ -26,60 +34,99 @@ export class Cards extends Component {
             secondPassword: e.target.value
         });
     }
+    handleSave(e){
+      e.preventDefault();
+      if (!this.state.name.length ||!this.state.email.length || !this.state.password.length && this.state.password===this.state.secondPassword){
+        return;
+      }
+      localStorage.setItem("name",this.state.name);
+      localStorage.setItem("password",this.state.password);
+      localStorage.setItem("email",this.state.email);
+      this.setState(prevState => ({        
+        name:"",
+        password: "",
+        email: "",
+        secondPassword:"",           
+      }));
+      this.setState({
+        confirm: true
+      })
+    }
     render() {
         const divStyle = {
-            withd:"100px"    
+            width:"200"    
         }; 
+        if(this.state.confirm){          
+          return <Redirect to={{
+            pathname: '/main',
+           }}
+           />
+        }
 
         return (
             <div>
-                <AccountBoxIcon style={divStyle}/>
+                <Menu />
+                <br/>
+                <br/>
+                <AccountBoxIcon style={{fontSize: 100}} color="primary"/>
+                <br/>
+                <br/>
                 <div>
-                <TextField
-            style={divStyle}
-              value={this.state.name}
-              id="texto"              
-              type="text"
-              label="Name"
-              onChange={this.handleName}       
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-            style={divStyle}
-              value={this.state.email}
-              id="texto"              
-              type="text"
-              label="Email"
-              onChange={this.handleEmail}       
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-            style={divStyle}
-              value={this.state.password}
-              id="texto"              
-              type="password"
-              label="Title"
-              onChange={this.handlePassword}       
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-            style={divStyle}
-              value={this.state.title}
-              id="texto"              
-              type="text"
-              label="Title"
-              onChange={this.handleTitleChange}       
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-                    
+                  <TextField
+                    style={divStyle}
+                    value={this.state.name}
+                    id="email"              
+                    type="text"
+                    label="Name"
+                    onChange={this.handleName}       
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                  <br/>
+                  <br/>
+                  <TextField
+                    style={divStyle}
+                    value={this.state.email}
+                    id="email"              
+                    type="text"
+                    label="Email"
+                    onChange={this.handleEmail}       
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                  <br/>
+                  <br/>
+                  <TextField
+                    style={divStyle}
+                    value={this.state.password}
+                    id="pass"              
+                    type="password"
+                    label="Password"
+                    onChange={this.handlePassword}       
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                  <br/>
+                  <br/>
+                  <TextField
+                    style={divStyle}
+                    value={this.state.secondPassword}
+                    id="second"              
+                    type="password"
+                    label="Confirm password"
+                    onChange={this.handleRepiPassword}       
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                  <br/>
+                  <br/>
+                  <Button variant="contained" color="primary" onClick={this.handleSave}>
+                    save
+                  </Button>                    
                 </div>
             </div>
 

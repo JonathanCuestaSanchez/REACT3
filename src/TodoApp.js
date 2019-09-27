@@ -2,10 +2,8 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Menu from "./component/Menu";
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+
 
 import { Redirect } from "react-router-dom";
 class TodoApp extends React.Component {
@@ -54,7 +52,7 @@ class TodoApp extends React.Component {
       status: this.state.status,
       dueDate: this.state.dueDate,
     };
-    this.setState({ back: true });
+    
     this.setState(prevState => ({
       items: prevState.items.concat(newItem),
       title:"",
@@ -63,6 +61,7 @@ class TodoApp extends React.Component {
       status:"",
       dueDate: "",      
     }));
+    this.setState({ back: true });
     
     
     
@@ -134,6 +133,7 @@ class TodoApp extends React.Component {
             <br/>
             <br/> 
             <TextField
+                  style={divStyle}
                   id="priority-todo"
                   select
                   label="Seleccione"
