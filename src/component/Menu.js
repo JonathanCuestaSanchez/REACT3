@@ -22,10 +22,7 @@ const styleMenu = {
   background: "white",
   height:"100vh"
 };
-const styleButton ={
-  background: "red",
-  left: "23%"
-}
+
 export default function TemporaryDrawer() {
 
   const [state, setState] = React.useState({

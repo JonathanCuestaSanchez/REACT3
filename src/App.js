@@ -4,7 +4,7 @@ import { Login } from './component/Login';
 import  Main  from './component/Main';
 import  {UserProfile}  from './component/UserProfile';
 import  TodoApp from './TodoApp';
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 class App extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ class App extends Component {
     localStorage.setItem('email',"prueba@mail.com");
     localStorage.setItem('password',"1234");
     localStorage.setItem('task',JSON.stringify([{"title":"implement Login","description": "some description text ",
-    "responsible": {"name": "Santiago Carrillo","email": "sancarbar@gmail"},"status": "ready","dueDate": 156464645646}]));
+    "responsible": {"name": "Santiago Carrillo","email": "sancarbar@gmail"},"status": "Ready","dueDate": 156464645646}]));
   }
 
   render() {

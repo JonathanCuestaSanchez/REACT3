@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Menu from "./component/Menu";
 import MenuItem from '@material-ui/core/MenuItem';
-
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import { Redirect } from "react-router-dom";
 class TodoApp extends React.Component {
@@ -11,13 +11,17 @@ class TodoApp extends React.Component {
     super(props);
     this.state = { items:  JSON.parse(localStorage.getItem('task')), title: '',description:"", status:"a", responsible: '', dueDate: '', menu: '', back: false};
     this.handleStatusChange = this.handleStatusChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleBack = this.handleBack.bind(this);
     this.handleResponsibleChange = this.handleResponsibleChange.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
     this.handleMenuChange = this.handleMenuChange.bind(this);
-  }  
+  } 
+  handleBack(e) {     
+    this.setState({ back: true });    
+  } 
   handleStatusChange(e) {     
     this.setState({ status: e.target.value });    
   }
@@ -61,13 +65,14 @@ class TodoApp extends React.Component {
       status:"",
       dueDate: "",      
     }));
+    
     this.setState({ back: true });
     
     
     
   }
   render() {
-    if(this.state.back){
+    if(this.state.back){    
       localStorage.setItem("task",JSON.stringify(this.state.items));
       return <Redirect to={{
         pathname: '/main',
@@ -83,11 +88,17 @@ class TodoApp extends React.Component {
       marginTop:"100px"    
      
     };
+    const fistyle = {         
+      position: "absolute",
+      top: "40px",
+      right:"30px"  
+    }; 
     const estados = [
       { status: "Completed" }, { status: "In Progess" }, { status: "Ready" }
     ] 
     return (
       <div>
+        <ArrowBackIcon style={fistyle} onClick={this.handleBack}></ArrowBackIcon>
         <Menu/>
         <div style={divbody}>          
           <h2>Add Task</h2>

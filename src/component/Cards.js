@@ -2,15 +2,10 @@ import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
 
-export class Cards extends Component {
-    constructor(props) {
-        super(props);         
-              
-    }    
+export class Cards extends Component {     
     render() {     
       const divStyle = {
       margin:"30px"    

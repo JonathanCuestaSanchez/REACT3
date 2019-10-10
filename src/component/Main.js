@@ -6,15 +6,36 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import { Redirect } from "react-router-dom";
 import Modal from '@material-ui/core/Modal';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 class Main extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { items: JSON.parse(localStorage.getItem('task')), menu: '', Add:false,  modalOpen:false };
-    this.handleMenuChange = this.handleMenuChange.bind(this);
-    this.handleAdd = this.handleAdd.bind(this);
+    this.state = { items: JSON.parse(localStorage.getItem('task')), menu: '', Add:false,  modalOpen:false, filterDueDate:"",filterResponsible:"",filterStatus:""};
+    this.handleMenuChange = this.handleMenuChange.bind(this);    
     this.handleModal = this.handleModal.bind(this);
+    this.handleAdd = this.handleAdd.bind(this);
+    this.handleClearAll= this.handleClearAll.bind(this);
+    this.handleFilterDueDate= this.handleFilterDueDate.bind(this);
+    this.handleFilterResponsible= this.handleFilterResponsible.bind(this);
+    this.handleFilterStatus= this.handleFilterStatus.bind(this);    
   }   
+  handleClearAll(e) {    
+    this.setState({ filterDueDate: ""}); 
+    this.setState({ filterResponsible: "" }); 
+    this.setState({ filterStatus: "" }); 
+
+  }  
+  handleFilterDueDate(e) {    
+    this.setState({ filterDueDate: e.target.value }); 
+  }  
+  handleFilterResponsible(e) {    
+    this.setState({ filterResponsible: e.target.value }); 
+  }  
+  handleFilterStatus(e) {    
+    this.setState({ filterStatus: e.target.value }); 
+  }  
   handleModal(e) {    
     if (this.state.modalOpen) {
       this.setState({ modalOpen: false });
@@ -49,22 +70,55 @@ class Main extends React.Component {
         bottom: "30px",
         right:"30px"  
     };     
-    const listItems = this.state.items.map( (Obj,i) =>       
-    <Cards key={"item"+i} title={Obj.title} description={Obj.description} responsible={Obj.responsible} status={Obj.status} dueDate={Obj.dueDate}/>
-    );   
-    if(this.state.Add==true){             
+    const listItems = this.state.items.map( (Obj,i) =>     
+    (this.state.filterDueDate==="" && this.state.filterStatus==="" && this.state.filterResponsible==="")
+    ||(Obj.status===this.state.filterStatus && Obj.dueDate===this.state.filterDueDate && Obj.responsible.name===this.state.filterResponsible)
+    ||(Obj.status===this.state.filterStatus && Obj.dueDate===this.state.filterDueDate && this.state.filterResponsible==="")
+    ||(Obj.status===this.state.filterStatus && Obj.responsible.name===this.state.filterResponsible && this.state.filterDueDate==="")
+    ||(Obj.responsible.name===this.state.filterResponsible && Obj.dueDate===this.state.filterDueDate && this.state.filterStatus==="")
+    ||(Obj.responsible.name===this.state.filterResponsible && Obj.status===this.state.filterStatus && this.state.filterDueDate==="")
+    ||(Obj.dueDate===this.state.filterDueDate && Obj.responsible.name=== this.state.filterResponsible && this.state.filterStatus==="")
+    ||(Obj.dueDate===this.state.filterDueDate &&  Obj.status=== this.state.filterStatus && this.state.filterResponsible==="")    
+    ||(Obj.status===this.state.filterStatus && this.state.filterDueDate==="" &&  this.state.filterResponsible==="")
+    ||(Obj.dueDate===this.state.filterDueDate &&this.state.filterResponsible==="" && this.state.filterStatus==="")
+    ||(Obj.responsible.name===this.state.filterResponsible && this.state.filterDueDate==="" &&   this.state.filterStatus==="")
+    ? 
+    <Cards key={"item"+i} title={Obj.title} description={Obj.description} responsible={Obj.responsible} status={Obj.status} dueDate={Obj.dueDate}/>:null
+    );  
+
+    const responsibles= [];
+
+    const listnames = this.state.items.map( (Obj,i) => 
+    responsibles.indexOf(Obj.responsible.name)>=0?null:responsibles.push( { name: Obj.responsible.name }));  
+    if(this.state.Add===true){             
         return <Redirect to={{
             pathname: '/todo',
         }}
         />
     }
-    const modalStyle= {
-      position: 'relative',
+    
+    const modalStyle = {
+      position: 'absolute',
       width: 400,
-      backgroundColor: "white",   
-
-      
+      backgroundColor: "white",
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      top: '50vh',
+      left: '50vw',
+      transform: 'translate(-50%, -50%)'
     };
+    const fieldStyle = {      
+      minWidth: 250,   
+      marginBottom:"30px"
+    };
+    const buttonStyle = {         
+      marginBottom:"30px",
+      Width: "50px",
+    };
+    const estados = [
+      { status: "Completed" }, { status: "In Progess" }, { status: "Ready" }
+    ] ;
     return (
         <div>
             <Menu />
@@ -79,11 +133,55 @@ class Main extends React.Component {
               onClose={this.handleModal}
             >
               <div style={modalStyle}>
-                <h2 id="simple-modal-title">Filters</h2>
-                <p id="simple-modal-description">
-                  Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                </p>
-                
+                <h2>Filters</h2>     
+                <TextField
+                  style={fieldStyle}          
+                  id="date"              
+                  type="date"
+                  label="DueDate"    
+                  onChange={this.handleFilterDueDate}    
+                  value={this.state.filterDueDate}                   
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                 /> 
+                 <TextField
+                  style={fieldStyle}
+                  id="priority-todo"
+                  onChange={this.handleFilterStatus}  
+                  value={this.state.filterStatus} 
+                  select
+                  label="Status"                  
+                  margin="normal"
+                >
+                  {estados.map(option => (
+                    <MenuItem key={option.status} value={option.status}>
+                      {option.status}
+                    </MenuItem>
+                  ))}
+                </TextField>    
+                <TextField
+                  style={fieldStyle}
+                  onChange={this.handleFilterResponsible}  
+                  value={this.state.filterResponsible} 
+                  id="priority-todo"
+                  select
+                  label="Responsible"                 
+                  margin="normal"
+                >
+                  {responsibles.map(option => (
+                    <MenuItem key={option.name} value={option.name}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </TextField>    
+                <Button style={buttonStyle} variant="contained" color="primary" onClick={this.handleModal}>
+                    Apply
+                </Button>
+                <Button style={buttonStyle} variant="contained" color="primary" onClick={this.handleClearAll}>
+                  Clear All
+                </Button>           
+
               </div>
             </Modal> 
                    

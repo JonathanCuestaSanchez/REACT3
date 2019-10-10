@@ -4,16 +4,21 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import { Redirect } from "react-router-dom";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 export class UserProfile extends  React.Component {
     constructor(props) {
         super(props);   
-        this.state={name:"",email:localStorage.getItem("email"),password:"",secondPassword:"",confirm:false}
+        this.state={name:"",email:localStorage.getItem("email"),password:"",secondPassword:"",confirm:false,back:false}
         this.handleName = this.handleName.bind(this); 
         this.handleEmail = this.handleEmail.bind(this); 
         this.handlePassword = this.handlePassword.bind(this); 
         this.handleRepiPassword = this.handleRepiPassword.bind(this); 
-        this.handleSave = this.handleSave.bind(this);             
+        this.handleSave = this.handleSave.bind(this);   
+        this.handleBack = this.handleBack.bind(this);          
     }
+    handleBack(e) {     
+      this.setState({ back: true });    
+    } 
     handleName(e) {
         this.setState({
             name: e.target.value
@@ -36,7 +41,7 @@ export class UserProfile extends  React.Component {
     }
     handleSave(e){
       e.preventDefault();
-      if (!this.state.name.length ||!this.state.email.length || !this.state.password.length && this.state.password===this.state.secondPassword){
+      if ((!this.state.name.length ||!this.state.email.length || !this.state.password.length) && this.state.password===this.state.secondPassword){
         return;
       }
       localStorage.setItem("name",this.state.name);
@@ -53,8 +58,19 @@ export class UserProfile extends  React.Component {
       })
     }
     render() {
+      if(this.state.back){     
+        return <Redirect to={{
+          pathname: '/main',
+         }}
+         />
+      }
         const divStyle = {
             width:"200"    
+        }; 
+        const fistyle = {         
+          position: "absolute",
+          top: "40px",
+          right:"30px"  
         }; 
         if(this.state.confirm){          
           return <Redirect to={{
@@ -65,6 +81,7 @@ export class UserProfile extends  React.Component {
 
         return (
             <div>
+                <ArrowBackIcon style={fistyle} onClick={this.handleBack}></ArrowBackIcon>
                 <Menu />
                 <br/>
                 <br/>

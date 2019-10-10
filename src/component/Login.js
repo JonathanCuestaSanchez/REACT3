@@ -23,7 +23,7 @@ export class Login extends React.Component {
     }
 
     render() {
-        if(this.state.isLogged==true){             
+        if(this.state.isLogged===true){             
             return <Redirect to={{
                 pathname: '/main',
             }}
@@ -88,7 +88,7 @@ export class Login extends React.Component {
             localStorage.setItem("email", this.state.email); 
      
             localStorage.setItem("isLogged", 'true');   
-            this.setState({isLogged: true});                
+            this.setState({isLogged: true});         
        
     }
 
