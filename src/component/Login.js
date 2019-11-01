@@ -10,17 +10,58 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import './Login.css'
 import { Redirect } from "react-router-dom";
-
+import axios from 'axios';
 
 export class Login extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { email: "", password:"",isLogged: JSON.parse(localStorage.getItem("isLogged")) };
+        this.state = { email: "", password:"",isLogged: JSON.parse(localStorage.getItem("isLogged")),createAccount:false };
         this.handleEmail = this.handleEmail.bind(this);
         this.handlePassword = this.handlePassword.bind(this);
         this.handleLogin = this.handleLogin.bind(this);  
+        this.handleCreate = this.handleCreate.bind(this);
       
     }
+    handleEmail(e) {
+        this.setState({
+            email: e.target.value
+        });
+    }
+
+    handlePassword(e) {
+        this.setState({
+            password: e.target.value
+        });
+    }
+    handleCreate(e) {
+        this.setState({
+            createAccount: true
+        });
+    }
+    handleLogin(e) {        
+        e.preventDefault();
+        const self= this;
+        axios.get(`http://localhost:8080/User/`+this.state.email)
+          .then(datos => {
+            if(datos.data){
+                if(datos.data.password===self.state.password){
+                    localStorage.setItem("email", self.state.email);  
+                    localStorage.setItem("id", datos.data.id);  
+                    localStorage.setItem("isLogged", "true");  
+                    self.setState({isLogged:true})
+                }else{
+                    alert("email o contraseñea equivocada");
+                }
+            } else{
+                alert("email o contraseñea equivocada");
+            }
+          })  .catch(function (error) {
+            alert("email o contraseñea equivocada");
+         });       
+     }
+                   
+       
+    
 
     render() {
         if(this.state.isLogged===true){             
@@ -28,6 +69,15 @@ export class Login extends React.Component {
                 pathname: '/main',
             }}
             />
+        }
+        if(this.state.createAccount===true){             
+            return <Redirect to={{
+                pathname: '/Createaccount',
+            }}
+            />
+        }
+        const butonStyle={
+            marginTop: 10
         }
         return (
             <React.Fragment>
@@ -38,7 +88,7 @@ export class Login extends React.Component {
                             <AccountCircleIcon />
                         </Avatar>
                         <Typography variant="headline">Task Planner</Typography>
-                        <form className="form" onSubmit={this.handleLogin}>
+                        <form className="form">
                             <FormControl margin="normal" required fullWidth>
                                 <InputLabel htmlFor="email">Email Address</InputLabel>
                                 <Input id="email" name="email" autoComplete="email"
@@ -63,8 +113,21 @@ export class Login extends React.Component {
                                 variant="raised"
                                 color="primary"
                                 className="submit"
+                                style={butonStyle}
+                                onClick={this.handleLogin}
                             >
                                 Sign in
+                            </Button>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="raised"
+                                color="primary"
+                                className="submit"
+                                style={butonStyle}
+                                onClick={this.handleCreate}
+                            >
+                                Create Account
                             </Button>
                         </form>
                     </Paper>
@@ -72,25 +135,7 @@ export class Login extends React.Component {
             </React.Fragment>
         );
     }
-    handleEmail(e) {
-        this.setState({
-            email: e.target.value
-        });
-    }
-
-    handlePassword(e) {
-        this.setState({
-            password: e.target.value
-        });
-    }
-    handleLogin(e) {        
-        e.preventDefault();  
-            localStorage.setItem("email", this.state.email); 
-     
-            localStorage.setItem("isLogged", 'true');   
-            this.setState({isLogged: true});         
-       
-    }
+  
 
 
 }

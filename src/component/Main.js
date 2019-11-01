@@ -9,10 +9,11 @@ import Modal from '@material-ui/core/Modal';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import axios from 'axios';
 class Main extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { items: JSON.parse(localStorage.getItem('task')), menu: '', Add:false,  modalOpen:false, filterDueDate:"",filterResponsible:"",filterStatus:""};
+    this.state = { items: [], menu: '', Add:false,  modalOpen:false, filterDueDate:"",filterResponsible:"",filterStatus:""};
     this.handleMenuChange = this.handleMenuChange.bind(this);    
     this.handleModal = this.handleModal.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
@@ -20,7 +21,24 @@ class Main extends React.Component {
     this.handleFilterDueDate= this.handleFilterDueDate.bind(this);
     this.handleFilterResponsible= this.handleFilterResponsible.bind(this);
     this.handleFilterStatus= this.handleFilterStatus.bind(this);    
+    const self=this;
+    axios.get(`http://localhost:8080/Task/User/`+localStorage.getItem("email"))
+          .then(datos => {
+            let tasksList = [];
+            
+            datos.data.forEach(function (task) {
+                tasksList.push({
+                  task                   
+                })
+            });
+            
+            self.setState({items: tasksList}); 
+            console.log(self.state.items)
+          })  
   }   
+  componentDidMount() {
+      
+  }
   handleClearAll(e) {    
     this.setState({ filterDueDate: ""}); 
     this.setState({ filterResponsible: "" }); 
@@ -83,13 +101,13 @@ class Main extends React.Component {
     ||(Obj.dueDate===this.state.filterDueDate &&this.state.filterResponsible==="" && this.state.filterStatus==="")
     ||(Obj.responsible.name===this.state.filterResponsible && this.state.filterDueDate==="" &&   this.state.filterStatus==="")
     ? 
-    <Cards key={"item"+i} title={Obj.title} description={Obj.description} responsible={Obj.responsible} status={Obj.status} dueDate={Obj.dueDate}/>:null
+    <Cards key={"item"+i} title={Obj.task.title} description={Obj.task.description} responsible={Obj.task.responsible} status={Obj.task.status} dueDate={Obj.task.dueDate}/>:null
     );  
 
     const responsibles= [];
 
     const listnames = this.state.items.map( (Obj,i) => 
-    responsibles.indexOf(Obj.responsible.name)>=0?null:responsibles.push( { name: Obj.responsible.name }));  
+    responsibles.indexOf(Obj.task.responsible)>=0?null:responsibles.push( { name: Obj.taskresponsible }));  
     if(this.state.Add===true){             
         return <Redirect to={{
             pathname: '/todo',

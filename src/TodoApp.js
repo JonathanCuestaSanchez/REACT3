@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Menu from "./component/Menu";
 import MenuItem from '@material-ui/core/MenuItem';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
+import axios from 'axios';
 import { Redirect } from "react-router-dom";
 class TodoApp extends React.Component {
   constructor(props) {
@@ -50,26 +50,18 @@ class TodoApp extends React.Component {
       return;
     }    
     const newItem = {
+      id: Math.random(),
       title: this.state.title,
       description: this.state.description,
-      responsible:{name:this.state.responsible} ,
+      responsible:this.state.responsible ,
       status: this.state.status,
       dueDate: this.state.dueDate,
-    };
-    
-    this.setState(prevState => ({
-      items: prevState.items.concat(newItem),
-      title:"",
-      description: "",
-      responsible: "",
-      status:"",
-      dueDate: "",      
-    }));
-    
-    this.setState({ back: true });
-    
-    
-    
+    };   
+    const self=this;
+    axios.post('http://localhost:8080/Task', newItem)
+            .then(res => {
+              self.setState({ back: true });
+            });   
   }
   render() {
     if(this.state.back){    

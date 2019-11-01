@@ -17,12 +17,12 @@ export class Cards extends Component {
               <CardActionArea>              
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                      {this.props.title.toString()}
+                      {this.props.title}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
                       {this.props.description} <br/>                      
-                      {this.props.status} - {this.props.dueDate.toString()}<br/>
-                      {this.props.responsible.name}
+                      {this.props.status} - {this.props.dueDate}<br/>
+                      {this.props.responsible}
                     </Typography>                 
                 </CardContent>
               </CardActionArea>         
